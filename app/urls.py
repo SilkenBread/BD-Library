@@ -1,6 +1,8 @@
 from django.urls import path
-from app.views import firstview
+from app.views.views_area_conocimiento import *
+
+app_name= 'app'
 
 urlpatterns = [
-    path('subtest/', firstview),
+    path('area_conocimiento/list/', AreaConocimientoListView.as_view(), name="area_conocimiento_list"),
 ]

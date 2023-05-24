@@ -1,0 +1,31 @@
+{% extends 'list.html' %} 
+{% load static %}
+
+{% block columns %}
+    <tr>
+        <th scope="col" style="width: 10%;">Código</th>
+        <th scope="col" style="width: 20%;">Nombre</th>
+        <th scope="col" style="width: 40%;">Descripcion</th>
+        <th scope="col" style="width: 20%;">Área contenida</th>
+        <th scope="col" style="width: 10%;">Opciones</th>
+    </tr>
+{% endblock %}
+
+{% block rows %}
+    {% for area in object_list %}
+        <tr>
+            <td>{{ area.codigo_area}}</td>
+            <td>{{ area.nombre_area }}</td>
+            <td>{{ area.desc_area }}</td>
+            <td>{{ area.cod_area_contenida.codigo_area }}</td>
+            <td>
+                <button class="btn btn-primary btn-xs"><i class="fa-regular fa-pen-to-square"></i></button>
+                <button class="btn btn-danger btn-xs"><i class="fa-regular fa-trash-can"></i></button>
+            </td>
+        </tr>
+    {% endfor %}
+{% endblock %}
+
+{% block javascript %}
+    <script src="{% static 'js/list_area_conocimiento.js' %}"></script>
+{% endblock %}
