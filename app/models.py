@@ -14,6 +14,9 @@ class Areaconocimiento(models.Model):
     nombre_area = models.CharField(max_length=20, verbose_name='Nombre')
     cod_area_contenida = models.ForeignKey('self', models.DO_NOTHING, db_column='cod_area_contenida', verbose_name='Código sub área')
 
+    def __str__(self):
+        return super().__str__()
+
     class Meta:
         verbose_name_plural='Áreas de conocimiento'
         db_table = 'areaconocimiento'
