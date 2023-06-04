@@ -31,4 +31,4 @@ class AreaConocimientoForm(ModelForm):
                 data['error'] = form.errors
         except Exception as e:
             data['error'] = str(e)
-        return data
+        return data 
