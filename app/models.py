@@ -10,8 +10,8 @@ from datetime import datetime
 
 class Areaconocimiento(models.Model):
     codigo_area = models.CharField(primary_key=True, max_length=10, verbose_name='Código')
-    desc_area = models.CharField(max_length=50, verbose_name='Descripción')
     nombre_area = models.CharField(max_length=20, verbose_name='Nombre')
+    desc_area = models.CharField(max_length=50, verbose_name='Descripción')
     cod_area_contenida = models.ForeignKey('self', models.DO_NOTHING, db_column='cod_area_contenida', verbose_name='Código sub área')
 
     def __str__(self):
