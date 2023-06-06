@@ -1,5 +1,6 @@
 {% extends 'body.html' %}
 {% load static %}
+{% load widget_tweaks %}
 
 {% block head %}
 
@@ -9,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-    <form method="post" action=".">
+    <form method="post" action="." enctype="multipart/form-data">
         <div class="card card-light">
             <div class="card-header">
                 <h3 class="card-title">
@@ -32,17 +33,18 @@
                         <ul>
                             {% for field in form %}
                                 {% for error in field.errors %}
-                                    {{ error }}
+                                    <li>{{ error }}</li>
                                 {% endfor %}
                             {% endfor %}
                         </ul>
                     </div>
                 {% endif %}
-                {% if form.visible_fields %}
+                {% for field in form.visible_fields %}
                     <div class="form-group">
-                        {{ form }}
+                        <label for="email">{{ field.label }}:</label>
+                        {{ field|add_class:'form-control'|attr:'autocomplete:off' }}
                     </div>
-                {% endif %}
+                {% endfor %}
             </div>
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary">

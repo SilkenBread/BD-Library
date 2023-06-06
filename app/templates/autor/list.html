@@ -1,0 +1,21 @@
+{% extends 'list.html' %} 
+{% load static %}
+
+{% block columns %}
+    <tr>
+        <th scope="col" style="width: 10%;">Código</th>
+        <th scope="col" style="width: 20%;">Primer Nombre</th>
+        <th scope="col" style="width: 20%;">Segundo Nombre</th>
+        <th scope="col" style="width: 20%;">Primer apellido</th>
+        <th scope="col" style="width: 20%;">Segundo apellido</th>
+        <th scope="col" style="width: 10%;">Opciones</th>
+    </tr>
+{% endblock %}
+
+{% block rows %}
+{% endblock %}
+
+{% block javascript %}
+    <script src="{% static 'js/autor/list.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+{% endblock %}
