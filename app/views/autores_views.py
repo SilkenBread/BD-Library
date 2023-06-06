@@ -71,3 +71,59 @@ class AutoresCreateView(CreateView):
         context['list_url'] = self.success_url
         context['action'] = 'add'
         return context
+    
+class AutoresUpdateView(UpdateView):
+    model = Autor
+    form_class = AutorForm
+    template_name = 'autor/create.html'
+    success_url = reverse_lazy('app:autores_list')
+    url_redirect = success_url
+
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+    
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            if action == 'edit':
+                form = self.get_form()
+                data = form.save()
+            else:
+                data['error'] = 'No ha ingresado a ninguna opción'
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Edición de un Autor'
+        context['entity'] = 'Autores'
+        context['list_url'] = self.success_url
+        context['action'] = 'edit'
+        return context
+    
+class AutoresDeleteView(DeleteView):
+    model = Autor
+    template_name = 'autor/delete.html'
+    success_url = reverse_lazy('app:autores_list')
+    url_redirect = success_url
+
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            self.object.delete()
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Eliminación de un área de conocimiento'
+        context['entity'] = 'Áreas de conocimiento'
+        context['list_url'] = self.success_url
+        return context

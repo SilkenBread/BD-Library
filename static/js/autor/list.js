@@ -28,8 +28,8 @@ $(document).ready(function (){
                     class: 'text-center',
                     orderable: false,
                     render: function (data, type, row) {
-                        var buttons = `<a href="/app/area_conocimiento/update/${row.pk}/" class="btn btn-secondary btn-xs"><i class="fas fa-edit"></i></a>
-                                       <a href="/app/area_conocimiento/delete/${row.pk}/" class="btn btn-danger btn-xs"><i class="fas fa-trash"></i></a>`
+                        var buttons = `<a href="/app/autores/update/${row.pk}/" class="btn btn-secondary btn-xs"><i class="fas fa-edit"></i></a>
+                                       <a href="/app/autores/delete/${row.pk}/" class="btn btn-danger btn-xs"><i class="fas fa-trash"></i></a>`
                         return buttons;
                     }
                 },
