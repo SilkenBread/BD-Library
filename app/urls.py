@@ -2,6 +2,8 @@ from django.urls import path
 from app.views.area_conocimiento_views import *
 from app.views.autores_views import *
 from app.views.dashboard_views import DashboardView
+from app.views.editorial_views import *
+from app.views.libro_views import *
 
 app_name= 'app'
 
@@ -19,4 +21,10 @@ urlpatterns = [
     path('autores/update/<str:pk>/', AutoresUpdateView.as_view(), name="autores_update"),
     path('autores/delete/<str:pk>/', AutoresDeleteView.as_view(), name="autores_delete"),
     #Libros
+    path('libros/list/', LibroListView.as_view(), name="libro_list"),
+    #Editoriales
+    path('editoriales/list/', EditorialListView.as_view(), name="editorial_list"),
+    path('editoriales/add/', EditorialCreateView.as_view(), name="editorial_create"),
+    path('editorial/update/<str:pk>/', EditorialUpdateView.as_view(), name="editorial_update"),
+    path('editorial/delete/<str:pk>/', EditorialDeleteView.as_view(), name="editorial_delete"),
 ]
