@@ -104,12 +104,12 @@ class Estudiante(models.Model):
 
 
 class Libro(models.Model):
-    isbn = models.CharField(primary_key=True, max_length=30)
-    titulo = models.CharField(max_length=50)
-    anio_publicacion = models.IntegerField(blank=True, null=True)
-    numero_pagina = models.IntegerField(blank=True, null=True)
-    codigo_area = models.ForeignKey(Areaconocimiento, models.DO_NOTHING, db_column='codigo_area')
-    codigo_editorial = models.ForeignKey(Editorial, models.DO_NOTHING, db_column='codigo_editorial')
+    isbn = models.CharField(primary_key=True, max_length=30, verbose_name='ISBN')
+    titulo = models.CharField(max_length=50, verbose_name='Título')
+    anio_publicacion = models.IntegerField(blank=True, null=True, verbose_name='Año publicación')
+    numero_pagina = models.IntegerField(blank=True, null=True, verbose_name='Número de páginas')
+    codigo_area = models.ForeignKey(Areaconocimiento, models.DO_NOTHING, db_column='codigo_area', verbose_name='Código de área')
+    codigo_editorial = models.ForeignKey(Editorial, models.DO_NOTHING, db_column='codigo_editorial', verbose_name='Código de editorial')
 
     class Meta:
         verbose_name_plural='Libros'

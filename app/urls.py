@@ -21,7 +21,10 @@ urlpatterns = [
     path('autores/update/<str:pk>/', AutoresUpdateView.as_view(), name="autores_update"),
     path('autores/delete/<str:pk>/', AutoresDeleteView.as_view(), name="autores_delete"),
     #Libros
-    path('libros/list/', LibroListView.as_view(), name="libro_list"),
+    path('libro/list/', LibroListView.as_view(), name="libro_list"),
+    path('libro/add/', LibroCreateView.as_view(), name="libro_create"),
+    path('libro/update/<str:pk>/', LibroUpdateView.as_view(), name="libro_update"),
+    path('libro/delete/<str:pk>/', LibroDeleteView.as_view(), name="libro_delete"),
     #Editoriales
     path('editoriales/list/', EditorialListView.as_view(), name="editorial_list"),
     path('editoriales/add/', EditorialCreateView.as_view(), name="editorial_create"),

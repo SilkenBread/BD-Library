@@ -1,6 +1,6 @@
 from django.forms import *
 
-from app.models import Areaconocimiento, Autor, Editorial
+from app.models import Areaconocimiento, Autor, Editorial, Libro
 
 class AreaConocimientoForm(ModelForm):
     def __init__(self, *args, **kwargs):
@@ -75,10 +75,10 @@ class LibroForm(ModelForm):
         for form in self.visible_fields():
             form.field.widget.attrs['class'] = 'form-control'
             form.field.widget.attrs['autocomplete'] = 'off'
-        self.fields['codigo_autor'].widget.attrs['autofocus'] = True
+        self.fields['isbn'].widget.attrs['autofocus'] = True
 
     class Meta:
-        model = Autor
+        model = Libro
         fields = '__all__'
         
 
