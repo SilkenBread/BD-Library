@@ -5,13 +5,15 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import *
 from app.forms import AreaConocimientoForm
+from app.mixins import ValidatePermissionRequiredMixin
 from app.models import *
 from django.core import serializers
 import json
 
-class AreaConocimientoListView(LoginRequiredMixin, ListView):
+class AreaConocimientoListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, ListView):
     model = Areaconocimiento
     template_name = 'area_conocimiento/list.html'
+    permission_required = 'app.view_areaconocimiento'
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -39,10 +41,11 @@ class AreaConocimientoListView(LoginRequiredMixin, ListView):
         context['entity'] = 'Áreas de conocimiento'
         return context
 
-class AreaConocimientoCreateView(LoginRequiredMixin, CreateView):
+class AreaConocimientoCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, CreateView):
     model = Areaconocimiento
     form_class = AreaConocimientoForm
     template_name = 'area_conocimiento/create.html'
+    permission_required = 'app.add_areaconocimiento'
     success_url = reverse_lazy('app:area_conocimiento_list')
     url_redirect = success_url
 
@@ -70,10 +73,11 @@ class AreaConocimientoCreateView(LoginRequiredMixin, CreateView):
         context['action'] = 'add'
         return context
     
-class AreaConocimientoUpdateView(LoginRequiredMixin, UpdateView):
+class AreaConocimientoUpdateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, UpdateView):
     model = Areaconocimiento
     form_class = AreaConocimientoForm
     template_name = 'area_conocimiento/create.html'
+    permission_required = 'app.change_areaconocimiento'
     success_url = reverse_lazy('app:area_conocimiento_list')
     url_redirect = success_url
 
@@ -101,9 +105,10 @@ class AreaConocimientoUpdateView(LoginRequiredMixin, UpdateView):
         context['action'] = 'edit'
         return context
     
-class AreaConocimientoDeleteView(LoginRequiredMixin, DeleteView):
+class AreaConocimientoDeleteView(LoginRequiredMixin, ValidatePermissionRequiredMixin, DeleteView):
     model = Areaconocimiento
     template_name = 'area_conocimiento/delete.html'
+    permission_required = 'app.delete_areaconocimiento'
     success_url = reverse_lazy('app:area_conocimiento_list')
     url_redirect = success_url
 

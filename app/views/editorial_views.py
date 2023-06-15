@@ -5,13 +5,15 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import *
 from app.forms import EditorialForm
+from app.mixins import ValidatePermissionRequiredMixin
 from app.models import *
 from django.core import serializers
 import json
 
-class EditorialListView(LoginRequiredMixin, ListView):
+class EditorialListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, ListView):
     model = Editorial
     template_name = 'editorial/list.html'
+    permission_required = 'app.view_editorial'
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -39,11 +41,12 @@ class EditorialListView(LoginRequiredMixin, ListView):
         return context
 
 
-class EditorialCreateView(LoginRequiredMixin, CreateView):
+class EditorialCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, CreateView):
     model = Editorial
     form_class = EditorialForm
     template_name = 'editorial/create.html'
     success_url = reverse_lazy('app:editorial_list')
+    permission_required = 'app.add_editorial'
     url_redirect = success_url
 
     def dispatch(self, request, *args, **kwargs):
@@ -70,10 +73,11 @@ class EditorialCreateView(LoginRequiredMixin, CreateView):
         context['action'] = 'add'
         return context
     
-class EditorialUpdateView(LoginRequiredMixin, UpdateView):
+class EditorialUpdateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, UpdateView):
     model = Editorial
     form_class = EditorialForm
     template_name = 'editorial/create.html'
+    permission_required = 'app.change_editorial'
     success_url = reverse_lazy('app:editorial_list')
     url_redirect = success_url
 
@@ -95,15 +99,16 @@ class EditorialUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Edición de un área de conocimiento'
-        context['entity'] = 'Áreas de conocimiento'
+        context['title'] = 'Edición de una Editorial'
+        context['entity'] = 'Editoriales'
         context['list_url'] = self.success_url
         context['action'] = 'edit'
         return context
     
-class EditorialDeleteView(LoginRequiredMixin, DeleteView):
+class EditorialDeleteView(LoginRequiredMixin, ValidatePermissionRequiredMixin, DeleteView):
     model = Editorial
     template_name = 'editorial/delete.html'
+    permission_required = 'app.delete_editorial'
     success_url = reverse_lazy('app:editorial_list')
     url_redirect = success_url
 
@@ -121,7 +126,7 @@ class EditorialDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Eliminación de un área de conocimiento'
-        context['entity'] = 'Áreas de conocimiento'
+        context['title'] = 'Eliminación de una editorial'
+        context['entity'] = 'Editoriales'
         context['list_url'] = self.success_url
         return context

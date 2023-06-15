@@ -38,7 +38,7 @@
     {% block javascript %}
 
     {% endblock %}
-    {% comment %} <script>
+    <script>
         {% if messages %}
             var html = '<p>';
             {% for message in messages %}
@@ -51,6 +51,6 @@
                 icon: 'error'
             });
         {% endif %}
-    </script> {% endcomment %}
+    </script>
     </body>
 {% endblock %}

@@ -17,7 +17,7 @@ class Areaconocimiento(models.Model):
 
     def __str__(self):
         return self.nombre_area
-
+ 
     class Meta:
         verbose_name_plural='Áreas de conocimiento'
         db_table = 'areaconocimiento'

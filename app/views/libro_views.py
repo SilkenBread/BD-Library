@@ -5,13 +5,15 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import *
 from app.forms import LibroForm
+from app.mixins import ValidatePermissionRequiredMixin
 from app.models import *
 from django.core import serializers
 import json
 
-class LibroListView(LoginRequiredMixin, ListView):
+class LibroListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, ListView):
     model = Libro
     template_name = 'libro/list.html'
+    permission_required = 'app.view_libro'
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -39,10 +41,11 @@ class LibroListView(LoginRequiredMixin, ListView):
         context['entity'] = 'Libros'
         return context
     
-class LibroCreateView(LoginRequiredMixin, CreateView):
+class LibroCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, CreateView):
     model = Libro
     form_class = LibroForm
     template_name = 'libro/create.html'
+    permission_required = 'app.add_libro'
     success_url = reverse_lazy('app:libro_list')
     url_redirect = success_url
 
@@ -70,10 +73,11 @@ class LibroCreateView(LoginRequiredMixin, CreateView):
         context['action'] = 'add'
         return context
 
-class LibroUpdateView(LoginRequiredMixin, UpdateView):
+class LibroUpdateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, UpdateView):
     model = Libro
     form_class = LibroForm
     template_name = 'libro/create.html'
+    permission_required = 'app.change_libro'
     success_url = reverse_lazy('app:libro_list')
     url_redirect = success_url
 
@@ -101,9 +105,10 @@ class LibroUpdateView(LoginRequiredMixin, UpdateView):
         context['action'] = 'edit'
         return context
     
-class LibroDeleteView(LoginRequiredMixin, DeleteView):
+class LibroDeleteView(LoginRequiredMixin, ValidatePermissionRequiredMixin, DeleteView):
     model = Libro
     template_name = 'libro/delete.html'
+    permission_required = 'app.delete_libro'
     success_url = reverse_lazy('app:libro_list')
     url_redirect = success_url
 
