@@ -51,12 +51,39 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{% url 'app:libro_list' %}" class="nav-link">
-                        <i class="nav-icon fas fa-book"></i>
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fa-solid fa-book-bookmark"></i>
                         <p>
                             Libros
+                            <i class="nav-icon right fas fa-angle-left"></i>
                         </p>
                     </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{% url 'app:libro_list' %}" class="nav-link">
+                                <i class="nav-icon fa-solid fa-book"></i>
+                                <p>
+                                    Libros
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fa-solid fa-book-open-reader"></i>
+                                <p>
+                                    Ejemplares
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fa-solid fa-globe"></i>
+                                <p>
+                                    Libros Digitales
+                                </p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link">

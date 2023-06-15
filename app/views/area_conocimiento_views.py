@@ -89,8 +89,13 @@ class AreaConocimientoUpdateView(LoginRequiredMixin, ValidatePermissionRequiredM
         try:
             action = request.POST['action']
             if action == 'edit':
+                self.object = self.get_object()  # Obtener el objeto a actualizar
                 form = self.get_form()
-                data = form.save()
+                if form.is_valid():
+                    form.save()  # Guardar los cambios en el objeto existente
+                    data['success'] = 'Registro actualizado exitosamente'
+                else:
+                    data['error'] = form.errors
             else:
                 data['error'] = 'No ha ingresado a ninguna opción'
         except Exception as e:
