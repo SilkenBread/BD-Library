@@ -1,6 +1,5 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
-from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -10,7 +9,7 @@ from app.models import *
 from django.core import serializers
 import json
 
-class LibroListView(ListView):
+class LibroListView(LoginRequiredMixin, ListView):
     model = Libro
     template_name = 'libro/list.html'
 
@@ -40,7 +39,7 @@ class LibroListView(ListView):
         context['entity'] = 'Libros'
         return context
     
-class LibroCreateView(CreateView):
+class LibroCreateView(LoginRequiredMixin, CreateView):
     model = Libro
     form_class = LibroForm
     template_name = 'libro/create.html'
@@ -71,7 +70,7 @@ class LibroCreateView(CreateView):
         context['action'] = 'add'
         return context
 
-class LibroUpdateView(UpdateView):
+class LibroUpdateView(LoginRequiredMixin, UpdateView):
     model = Libro
     form_class = LibroForm
     template_name = 'libro/create.html'
@@ -102,7 +101,7 @@ class LibroUpdateView(UpdateView):
         context['action'] = 'edit'
         return context
     
-class LibroDeleteView(DeleteView):
+class LibroDeleteView(LoginRequiredMixin, DeleteView):
     model = Libro
     template_name = 'libro/delete.html'
     success_url = reverse_lazy('app:libro_list')

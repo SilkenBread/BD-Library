@@ -1,17 +1,15 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
-from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import *
 from app.forms import AutorForm
-#from app.forms import Autor
 from app.models import *
 from django.core import serializers
 import json
 
-class AutoresListView(ListView):
+class AutoresListView(LoginRequiredMixin, ListView):
     model = Autor
     template_name = 'autor/list.html'
 
@@ -41,7 +39,7 @@ class AutoresListView(ListView):
         context['entity'] = 'Autores'
         return context
     
-class AutoresCreateView(CreateView):
+class AutoresCreateView(LoginRequiredMixin, CreateView):
     model = Autor
     form_class = AutorForm
     template_name = 'autor/create.html'
@@ -72,7 +70,7 @@ class AutoresCreateView(CreateView):
         context['action'] = 'add'
         return context
     
-class AutoresUpdateView(UpdateView):
+class AutoresUpdateView(LoginRequiredMixin, UpdateView):
     model = Autor
     form_class = AutorForm
     template_name = 'autor/create.html'
@@ -103,7 +101,7 @@ class AutoresUpdateView(UpdateView):
         context['action'] = 'edit'
         return context
     
-class AutoresDeleteView(DeleteView):
+class AutoresDeleteView(LoginRequiredMixin, DeleteView):
     model = Autor
     template_name = 'autor/delete.html'
     success_url = reverse_lazy('app:autores_list')

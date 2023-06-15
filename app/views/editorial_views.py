@@ -1,17 +1,15 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
-from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import *
 from app.forms import EditorialForm
-#from app.forms import AreaConocimientoForm
 from app.models import *
 from django.core import serializers
 import json
 
-class EditorialListView(ListView):
+class EditorialListView(LoginRequiredMixin, ListView):
     model = Editorial
     template_name = 'editorial/list.html'
 
@@ -41,7 +39,7 @@ class EditorialListView(ListView):
         return context
 
 
-class EditorialCreateView(CreateView):
+class EditorialCreateView(LoginRequiredMixin, CreateView):
     model = Editorial
     form_class = EditorialForm
     template_name = 'editorial/create.html'
@@ -72,7 +70,7 @@ class EditorialCreateView(CreateView):
         context['action'] = 'add'
         return context
     
-class EditorialUpdateView(UpdateView):
+class EditorialUpdateView(LoginRequiredMixin, UpdateView):
     model = Editorial
     form_class = EditorialForm
     template_name = 'editorial/create.html'
@@ -103,7 +101,7 @@ class EditorialUpdateView(UpdateView):
         context['action'] = 'edit'
         return context
     
-class EditorialDeleteView(DeleteView):
+class EditorialDeleteView(LoginRequiredMixin, DeleteView):
     model = Editorial
     template_name = 'editorial/delete.html'
     success_url = reverse_lazy('app:editorial_list')

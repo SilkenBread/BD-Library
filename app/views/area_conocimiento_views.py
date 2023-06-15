@@ -1,6 +1,5 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
-from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -10,12 +9,11 @@ from app.models import *
 from django.core import serializers
 import json
 
-class AreaConocimientoListView(ListView):
+class AreaConocimientoListView(LoginRequiredMixin, ListView):
     model = Areaconocimiento
     template_name = 'area_conocimiento/list.html'
 
     @method_decorator(csrf_exempt)
-    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
   
@@ -41,7 +39,7 @@ class AreaConocimientoListView(ListView):
         context['entity'] = 'Áreas de conocimiento'
         return context
 
-class AreaConocimientoCreateView(CreateView):
+class AreaConocimientoCreateView(LoginRequiredMixin, CreateView):
     model = Areaconocimiento
     form_class = AreaConocimientoForm
     template_name = 'area_conocimiento/create.html'
@@ -72,7 +70,7 @@ class AreaConocimientoCreateView(CreateView):
         context['action'] = 'add'
         return context
     
-class AreaConocimientoUpdateView(UpdateView):
+class AreaConocimientoUpdateView(LoginRequiredMixin, UpdateView):
     model = Areaconocimiento
     form_class = AreaConocimientoForm
     template_name = 'area_conocimiento/create.html'
@@ -103,7 +101,7 @@ class AreaConocimientoUpdateView(UpdateView):
         context['action'] = 'edit'
         return context
     
-class AreaConocimientoDeleteView(DeleteView):
+class AreaConocimientoDeleteView(LoginRequiredMixin, DeleteView):
     model = Areaconocimiento
     template_name = 'area_conocimiento/delete.html'
     success_url = reverse_lazy('app:area_conocimiento_list')
