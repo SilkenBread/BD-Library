@@ -8,11 +8,23 @@
 from django.db import models
 from datetime import datetime
 from user.models import User
+from django.core.validators import RegexValidator
 
 class Areaconocimiento(models.Model):
-    codigo_area = models.CharField(primary_key=True, max_length=10, verbose_name='Código')
+    codigo_area = models.CharField(
+        primary_key=True, 
+        max_length=10, 
+        verbose_name='Código',
+        validators=[
+            RegexValidator(
+                regex = r'^a\d{2}$',
+                message=('Codigo no valido con el estandar, ejemplo: A01'),
+                code='invalid_code_area'
+            )
+        ]
+    )
     nombre_area = models.CharField(max_length=20, verbose_name='Nombre')
-    desc_area = models.CharField(max_length=50, verbose_name='Descripción')
+    desc_area = models.CharField(max_length=50, null=True, blank=True, verbose_name='Descripción')
     cod_area_contenida = models.ForeignKey('self', models.DO_NOTHING, null=True, blank=True, verbose_name='Código sub área')
 
     def __str__(self):
@@ -24,7 +36,18 @@ class Areaconocimiento(models.Model):
 
 
 class Autor(models.Model):
-    codigo_autor = models.CharField(primary_key=True, max_length=10, verbose_name='Código')
+    codigo_autor = models.CharField(
+        primary_key=True,
+        max_length=10, 
+        verbose_name='Código',
+        validators=[
+            RegexValidator(
+                regex = r'^aut\d{2}$',
+                message=('Codigo no valido con el estandar, ejemplo: AUT01'),
+                code='invalid_code_area'
+            )
+        ]
+    )
     primer_nombre = models.CharField(max_length=40, verbose_name='Primer nombre')
     segundo_nombre = models.CharField(max_length=40, blank=True, null=True, verbose_name='Segundo nombre')
     primer_apellido = models.CharField(max_length=40, verbose_name='Primer apellido')
@@ -39,7 +62,18 @@ class Autor(models.Model):
 
 
 class Editorial(models.Model):
-    codigo_editorial = models.CharField(primary_key=True, max_length=10, verbose_name='ID')
+    codigo_editorial = models.CharField(
+        primary_key=True,
+        max_length=10, 
+        verbose_name='ID',
+        validators=[
+            RegexValidator(
+                regex = r'^ed\d{3}$',
+                message=('Codigo no valido con el estandar, ejemplo: ED001'),
+                code='invalid_code_area'
+            )
+        ]
+    )
     nombre_editorial = models.CharField(max_length=30, verbose_name='Nombre')
     pagina_web = models.URLField(blank=True, null=True, verbose_name='URL')
     pais_origen = models.CharField(max_length=30, blank=True, null=True, verbose_name='País origen')

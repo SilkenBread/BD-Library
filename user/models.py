@@ -25,11 +25,12 @@ class UserManager(BaseUserManager):
         return self._create_user(username, name,last_name, password, True, True, **extra_fields)
 
 class User(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField(max_length = 255, unique = True)
+    dni = models.CharField('Documento', max_length=50, unique = True)
     name = models.CharField('Nombres', max_length = 255, blank = False, null = False)
     last_name = models.CharField('Apellidos', max_length = 255, blank = False, null = False)
+    username = models.CharField(max_length = 255, unique = True)
     phone_user = models.CharField('Telefono', max_length=50)
-    dni = models.CharField('Documento', max_length=50, unique = True)
+    
     is_active = models.BooleanField(default = True)
     is_staff = models.BooleanField(default = False)
     objects = UserManager()
@@ -43,6 +44,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def toJSON(self):
         item = model_to_dict(self)
+        print(item)
         return item
 
 

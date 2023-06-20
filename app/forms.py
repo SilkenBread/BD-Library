@@ -33,12 +33,15 @@ class AreaConocimientoForm(ModelForm):
 
     def save(self, commit=True):
         data = {}
-        form = super()
         try:
-            if form.is_valid():
-                form.save()
+            form = super().save(commit=False)
+            form.codigo_area = form.codigo_area.upper() # Convierte el campo 'codigo_area' a mayúsculas
+            form.nombre_area = form.nombre_area.upper() # Convierte el campo 'nombre_area' a mayúsculas
+            if self.is_valid():
+                if commit:
+                    form.save()
             else:
-                data['error'] = form.errors
+                data['error'] = self.errors
         except Exception as e:
             data['error'] = str(e)
         return data
