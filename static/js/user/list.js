@@ -18,6 +18,8 @@ $(document).ready(function (){
                 {"data": "id"},
                 {"data": "full_name"},
                 {"data": "username"},
+                {"data": "dni"},
+                {"data": "phone_user"},
                 {"data": "date_joined"},
                 {"data": "groups"},
                 {"data": "id"},

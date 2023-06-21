@@ -8,7 +8,7 @@ class UserForm(ModelForm):
 
     class Meta:
         model = User
-        fields = 'first_name', 'last_name', 'email', 'username', 'password', 'groups'
+        fields = 'first_name', 'last_name', 'email', 'dni','phone_user','username', 'password', 'groups'
         widgets = {
             'first_name': TextInput(
                 attrs={
@@ -18,6 +18,16 @@ class UserForm(ModelForm):
             'last_name': TextInput(
                 attrs={
                     'placeholder': 'Ingrese sus apellidos',
+                }
+            ),
+            'dni': TextInput(
+                attrs={
+                    'placeholder': 'Ingrese su documento de identidad',
+                }
+            ),
+            'phone_user': TextInput(
+                attrs={
+                    'placeholder': 'Ingrese su numero de telefono',
                 }
             ),
             'email': TextInput(
