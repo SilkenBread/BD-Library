@@ -89,10 +89,13 @@ class EditorialUpdateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, U
         try:
             action = request.POST['action']
             if action == 'edit':
+                self.object = self.get_object()  # Obtener el objeto a actualizar
                 form = self.get_form()
-                data = form.save()
-            else:
-                data['error'] = 'No ha ingresado a ninguna opción'
+                if form.is_valid():
+                    form.save()  # Guardar los cambios en el objeto existente
+                    data['success'] = 'Registro actualizado exitosamente'
+                else:
+                    data['error'] = form.errors
         except Exception as e:
             data['error'] = str(e)
         return JsonResponse(data)

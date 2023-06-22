@@ -85,14 +85,12 @@ class AutorForm(ModelForm):
         try:
             form = super().save(commit=False)
             form.codigo_autor = form.codigo_autor.upper() # Convierte el campo 'codigo_autor' a mayúsculas
-            if self.is_valid():
-                if commit:
-                    form.save()
-            else:
-                data['error'] = self.errors
+            if commit:
+                form.save()
         except Exception as e:
             data['error'] = str(e)
         return data
+
     
 
 class LibroForm(ModelForm):
