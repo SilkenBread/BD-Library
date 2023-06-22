@@ -7,22 +7,13 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 from datetime import datetime
+
+from django.forms import model_to_dict
 from user.models import User
 from django.core.validators import RegexValidator
 
 class Areaconocimiento(models.Model):
-    codigo_area = models.CharField(
-        primary_key=True, 
-        max_length=10, 
-        verbose_name='Código',
-        validators=[
-            RegexValidator(
-                regex = r'^a\d{2}$',
-                message=('Codigo no valido con el estandar, ejemplo: A01'),
-                code='invalid_code_area'
-            )
-        ]
-    )
+    codigo_area = models.CharField(primary_key=True, max_length=10, verbose_name='Código')
     nombre_area = models.CharField(max_length=20, verbose_name='Nombre')
     desc_area = models.CharField(max_length=50, null=True, blank=True, verbose_name='Descripción')
     cod_area_contenida = models.ForeignKey('self', models.DO_NOTHING, null=True, blank=True, verbose_name='Código sub área')
@@ -36,18 +27,7 @@ class Areaconocimiento(models.Model):
 
 
 class Autor(models.Model):
-    codigo_autor = models.CharField(
-        primary_key=True,
-        max_length=10, 
-        verbose_name='Código',
-        validators=[
-            RegexValidator(
-                regex = r'^aut\d{2}$',
-                message=('Codigo no valido con el estandar, ejemplo: AUT01'),
-                code='invalid_code_area'
-            )
-        ]
-    )
+    codigo_autor = models.CharField(primary_key=True, max_length=10, verbose_name='Código')
     primer_nombre = models.CharField(max_length=40, verbose_name='Primer nombre')
     segundo_nombre = models.CharField(max_length=40, blank=True, null=True, verbose_name='Segundo nombre')
     primer_apellido = models.CharField(max_length=40, verbose_name='Primer apellido')
@@ -62,18 +42,7 @@ class Autor(models.Model):
 
 
 class Editorial(models.Model):
-    codigo_editorial = models.CharField(
-        primary_key=True,
-        max_length=10, 
-        verbose_name='ID',
-        validators=[
-            RegexValidator(
-                regex = r'^ed\d{3}$',
-                message=('Codigo no valido con el estandar, ejemplo: ED001'),
-                code='invalid_code_area'
-            )
-        ]
-    )
+    codigo_editorial = models.CharField(primary_key=True, max_length=10, verbose_name='ID'  )
     nombre_editorial = models.CharField(max_length=30, verbose_name='Nombre')
     pagina_web = models.URLField(blank=True, null=True, verbose_name='URL')
     pais_origen = models.CharField(max_length=30, blank=True, null=True, verbose_name='País origen')
@@ -91,8 +60,8 @@ class Libro(models.Model):
     titulo = models.CharField(max_length=50, verbose_name='Título')
     anio_publicacion = models.IntegerField(blank=True, null=True, verbose_name='Año publicación')
     numero_pagina = models.IntegerField(blank=True, null=True, verbose_name='Número de páginas')
-    codigo_area = models.ForeignKey(Areaconocimiento, blank=True, null=True, on_delete=models.CASCADE, verbose_name='Código de área')
-    codigo_editorial = models.ForeignKey(Editorial, on_delete=models.CASCADE, verbose_name='Código de editorial')
+    codigo_area = models.ForeignKey(Areaconocimiento, on_delete=models.PROTECT,verbose_name='Area de conocimiento')
+    codigo_editorial = models.ForeignKey(Editorial, on_delete=models.PROTECT,verbose_name='Editorial')
     autores = models.ManyToManyField(Autor)
 
     def __str__(self):
@@ -101,6 +70,12 @@ class Libro(models.Model):
     class Meta:
         verbose_name_plural='Libros'
         db_table = 'libro'
+
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['areaconocimiento']= self.codigo_area.nombre_area
+        item['editorial']= self.codigo_editorial.nombre_editorial
+        return item
 
 class Ejemplar(models.Model):
     libro = models.ForeignKey(Libro, on_delete=models.PROTECT)
@@ -119,11 +94,22 @@ class Ejemplar(models.Model):
         db_table = 'ejemplar'
         unique_together = (('libro', 'numero_ejemplar'))
 
+    def toJSON(self):
+        item = model_to_dict(self)
+        return item
+
 class LibroDigital(Libro):
     formato = models.CharField(max_length=30, verbose_name='Formato')
     url = models.URLField(verbose_name='URL')
     tamanio = models.IntegerField(verbose_name='Tamaño del Libro')
 
+    def __str__(self):
+        return self.titulo
+
     class Meta:
         verbose_name_plural='Libros digitales'
         db_table = 'libro_digital'
+
+    def toJSON(self):
+        item = model_to_dict(self)
+        return item

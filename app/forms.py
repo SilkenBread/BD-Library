@@ -57,16 +57,39 @@ class AutorForm(ModelForm):
     class Meta:
         model = Autor
         fields = '__all__'
+        widgets = {
+            'primer_nombre': TextInput(
+                attrs={
+                    'placeholder': 'Ingrese el primer nombre',
+                }
+            ),
+            'segundo_nombre': TextInput(
+                attrs={
+                    'placeholder': 'Ingrese el segundo nombre',
+                }
+            ),
+            'primer_apellido': TextInput(
+                attrs={
+                    'placeholder': 'Ingrese el primer apellido',
+                }
+            ),
+            'segundo_apellido': TextInput(
+                attrs={
+                    'placeholder': 'Ingrese el segundo apellido',
+                }
+            ),
+        }
         
-
     def save(self, commit=True):
         data = {}
-        form = super()
         try:
-            if form.is_valid():
-                form.save()
+            form = super().save(commit=False)
+            form.codigo_autor = form.codigo_autor.upper() # Convierte el campo 'codigo_autor' a mayúsculas
+            if self.is_valid():
+                if commit:
+                    form.save()
             else:
-                data['error'] = form.errors
+                data['error'] = self.errors
         except Exception as e:
             data['error'] = str(e)
         return data
@@ -109,15 +132,17 @@ class EditorialForm(ModelForm):
         model = Editorial
         fields = '__all__'
         
-
     def save(self, commit=True):
         data = {}
-        form = super()
         try:
-            if form.is_valid():
-                form.save()
+            form = super().save(commit=False)
+            form.codigo_editorial = form.codigo_editorial.upper() # Convierte el campo 'codigo_editorial' a mayúsculas
+            form.nombre_editorial = form.nombre_editorial.upper() # Convierte el campo 'nombre_editorial' a mayúsculas
+            if self.is_valid():
+                if commit:
+                    form.save()
             else:
-                data['error'] = form.errors
+                data['error'] = self.errors
         except Exception as e:
             data['error'] = str(e)
         return data
