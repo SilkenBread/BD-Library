@@ -9,6 +9,7 @@ urlpatterns = [
     path('list/', UserListView.as_view(), name='user_list'),
     path('add/',UserCreateView.as_view(), name='user_create'),
     path('update/<int:pk>/',UserUpdateView.as_view(), name='user_update'),
-    #path('delete/<int:pk>/',UserDeleteView.as_view(), name='user_delete'),
+    path('delete/<int:pk>/',UserDeleteView.as_view(), name='user_delete'),
+    path('profile/',UserProfileView.as_view(), name='user_profile'),
 ]
 

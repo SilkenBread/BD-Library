@@ -107,3 +107,67 @@ class UserUpdateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Update
         context['list_url'] = self.success_url
         context['action'] = 'edit'
         return context
+    
+class UserDeleteView(LoginRequiredMixin, ValidatePermissionRequiredMixin, DeleteView):
+    model = User
+    template_name = 'user/delete.html'
+    success_url = reverse_lazy('user:user_list')
+    #permission_required = 'user.delete_user'
+    permission_required = 'delete_user'
+    url_redirect = success_url
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        #tomar el objeto
+        self.object = self.get_object()
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            self.object.delete()
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Eliminación de un Usuario'
+        context['entity'] = 'Usuarios'
+        context['list_url'] = self.success_url
+        return context
+    
+class UserProfileView(LoginRequiredMixin, UpdateView):
+    model = User
+    form_class = UserForm
+    template_name = 'user/profile.html'
+    success_url = reverse_lazy('app:dashboard')
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            if action == 'edit':
+                form = self.get_form()
+                data = form.save()
+            else:
+                data['error'] = 'No ha ingresado a ninguna opción'
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Edición de Perfil'
+        context['entity'] = 'Perfil'
+        context['list_url'] = self.success_url
+        context['action'] = 'edit'
+        return context
