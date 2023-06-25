@@ -3,6 +3,7 @@ from app.views.area_conocimiento_views import *
 from app.views.autores_views import *
 from app.views.dashboard_views import DashboardView
 from app.views.editorial_views import *
+from app.views.ejemplar_views import *
 from app.views.libro_views import *
 
 app_name= 'app'
@@ -30,4 +31,9 @@ urlpatterns = [
     path('editoriales/add/', EditorialCreateView.as_view(), name="editorial_create"),
     path('editorial/update/<str:pk>/', EditorialUpdateView.as_view(), name="editorial_update"),
     path('editorial/delete/<str:pk>/', EditorialDeleteView.as_view(), name="editorial_delete"),
+    #Ejemplares
+    path('ejemplar/list/', EjemplarListView.as_view(), name="ejemplar_list"),
+    path('ejemplar/add/', EjemplarCreateView.as_view(), name="ejemplar_create"),
+    path('ejemplar/update/<str:pk>/', EjemplarUpdateView.as_view(), name="ejemplar_update"),
+    path('ejemplar/delete/<str:pk>/', EjemplarDeleteView.as_view(), name="ejemplar_delete"),
 ]

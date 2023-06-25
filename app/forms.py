@@ -1,7 +1,7 @@
 from django.forms import *
 from django import forms
 
-from app.models import Areaconocimiento, Autor, Editorial, Libro
+from app.models import Areaconocimiento, Autor, Editorial, Ejemplar, Libro
 
 class AreaConocimientoForm(ModelForm):
     def __init__(self, *args, **kwargs):
@@ -93,7 +93,6 @@ class AutorForm(ModelForm):
         except Exception as e:
             data['error'] = str(e)
         return data
-
         
 class EditorialForm(ModelForm):
     def __init__(self, *args, **kwargs):
@@ -141,7 +140,6 @@ class EditorialForm(ModelForm):
             data['error'] = str(e)
         return data
 
-
 class LibroForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -188,7 +186,34 @@ class LibroForm(ModelForm):
             ),
         }
         
+    def save(self, commit=True):
+        data = {}
+        form = super()
+        try:
+            if form.is_valid():
+                form.save()
+            else:
+                data['error'] = form.errors
+        except Exception as e:
+            data['error'] = str(e)
+        return data
+    
+class EjemplarForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['numero_ejemplar'].widget.attrs['autofocus'] = True
 
+    class Meta:
+        model = Ejemplar
+        fields = '__all__'
+        widgets = {
+            'libro': Select(
+                attrs={
+                    'class':'select2'
+                }
+            ),
+        }
+        
     def save(self, commit=True):
         data = {}
         form = super()

@@ -81,7 +81,7 @@ class Libro(models.Model):
     autores = models.ManyToManyField(Autor)
 
     def __str__(self):
-        return self.titulo
+        return f"{self.titulo} | {self.isbn}"
     
     class Meta:
         verbose_name_plural='Libros'
@@ -95,15 +95,15 @@ class Libro(models.Model):
 
 class Ejemplar(models.Model):
     libro = models.ForeignKey(Libro, on_delete=models.PROTECT)
-    numero_ejemplar = models.IntegerField(verbose_name='Número ejemplar')
-    numero_sala = models.IntegerField(verbose_name='Número de sala')
-    numero_pasillo = models.IntegerField(verbose_name='Número de pasillo')
-    numero_estante = models.IntegerField(verbose_name='Número de estante')
-    numero_cajon = models.IntegerField(verbose_name='Número de cajón')
+    numero_ejemplar = models.PositiveIntegerField(verbose_name='Número ejemplar')
+    numero_sala = models.PositiveIntegerField(verbose_name='Número de sala')
+    numero_pasillo = models.PositiveIntegerField(verbose_name='Número de pasillo')
+    numero_estante = models.PositiveIntegerField(null=True, blank=True, verbose_name='Número de estante')
+    numero_cajon = models.PositiveIntegerField(null=True, blank=True, verbose_name='Número de cajón')
     disponibilidad = models.BooleanField(default=True ,blank=False, null=False, verbose_name='Disponibilidad')
 
     def __str__(self):
-        return self.numero_ejemplar
+        return f"{self.numero_ejemplar} | {self.libro}"
     
     class Meta:
         verbose_name_plural='Ejemplares'
@@ -112,6 +112,7 @@ class Ejemplar(models.Model):
 
     def toJSON(self):
         item = model_to_dict(self)
+        item['datalibro'] = self.libro.toJSON()
         return item
 
 class LibroDigital(Libro):
