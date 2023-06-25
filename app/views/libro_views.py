@@ -21,6 +21,7 @@ class LibroListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, ListVie
   
     def post(self, request, *args, **kwargs):
         data = {}
+        print(request.user.groups.first())
         try:
             action = request.POST['action']
             if action == 'searchdata':

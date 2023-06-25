@@ -1,4 +1,5 @@
 from django.forms import *
+from django import forms
 from user.models import User
 
 
@@ -8,7 +9,7 @@ class UserForm(ModelForm):
 
     class Meta:
         model = User
-        fields = 'first_name', 'last_name', 'email', 'dni','phone_user','username', 'password', 'groups'
+        fields = 'first_name', 'last_name', 'email', 'dni','phone_user','username', 'password', 'groups', 'observacion'
         widgets = {
             'first_name': TextInput(
                 attrs={
@@ -41,15 +42,20 @@ class UserForm(ModelForm):
                 }
             ),
             'password': PasswordInput(render_value=True,
-                                    attrs={
-                                        'placeholder': 'Ingrese su password',
-                                    }
-                                    ),
-            'groups': SelectMultiple(attrs={
-                'class': 'form-control select2',
-                'style': 'width: 100%',
-                'multiple': 'multiple'
-            })
+                attrs={
+                    'placeholder': 'Ingrese su password',
+                }
+                ),
+            'groups': forms.SelectMultiple(
+                attrs={
+                    'class': 'select2'
+                }
+            ),
+            'observacion': TextInput(
+                attrs={
+                    'placeholder': 'Ingrese las observaciones del usuario',
+                }
+            ),
         }
         exclude = ['user_permissions','date_joined','last_login', 'is_superuser', 'is_active', 'is_staff']
 

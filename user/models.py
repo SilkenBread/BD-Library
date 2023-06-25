@@ -8,6 +8,7 @@ from crum import get_current_request
 class User(AbstractUser):
     dni = models.CharField('Documento', max_length=50, unique = True)
     phone_user = models.CharField('Telefono', max_length=50)
+    observacion = models.CharField(verbose_name='Observacion', max_length=255, blank=True, null=True)
 
     class Meta:
         verbose_name = 'Usuario'

@@ -25,7 +25,6 @@ class UserListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, ListView
             if action == 'searchdata':
                 data = []
                 for i in User.objects.all():
-                    #print(i.toJSON())
                     data.append(i.toJSON())
             else:
                 data['error'] = 'Ha ocurrido un error'
