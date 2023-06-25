@@ -23,7 +23,7 @@ class Areaconocimiento(models.Model):
     cod_area_contenida = models.ForeignKey('self', models.DO_NOTHING, null=True, blank=True, verbose_name='Código sub área')
 
     def __str__(self):
-        return self.nombre_area
+        return f"{self.codigo_area} | {self.nombre_area}"
  
     class Meta:
         verbose_name_plural='Áreas de conocimiento'
@@ -60,7 +60,7 @@ class Editorial(models.Model):
     pais_origen = models.CharField(max_length=30, blank=True, null=True, verbose_name='País origen')
 
     def __str__(self):
-        return self.nombre_editorial
+        return f"{self.codigo_editorial} | {self.nombre_editorial}"
     
     class Meta:
         verbose_name_plural='Editoriales'
@@ -73,7 +73,7 @@ class Editorial(models.Model):
 
 class Libro(models.Model):
     isbn = models.CharField(unique=True, max_length=30, verbose_name='ISBN')
-    titulo = models.CharField(max_length=50, verbose_name='Título')
+    titulo = models.CharField(unique=True, max_length=50, verbose_name='Título')
     anio_publicacion = models.IntegerField(blank=True, null=True, verbose_name='Año publicación')
     numero_pagina = models.IntegerField(blank=True, null=True, verbose_name='Número de páginas')
     codigo_area = models.ForeignKey(Areaconocimiento, on_delete=models.PROTECT,verbose_name='Area de conocimiento')
@@ -91,6 +91,7 @@ class Libro(models.Model):
         item = model_to_dict(self)
         item['areaconocimiento']= self.codigo_area.nombre_area
         item['editorial']= self.codigo_editorial.nombre_editorial
+        print(item)
         return item
 
 class Ejemplar(models.Model):

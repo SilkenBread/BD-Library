@@ -1,13 +1,11 @@
 from django.forms import *
+from django import forms
 
 from app.models import Areaconocimiento, Autor, Editorial, Libro
 
 class AreaConocimientoForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        for form in self.visible_fields():
-            form.field.widget.attrs['class'] = 'form-control'
-            form.field.widget.attrs['autocomplete'] = 'off'
         self.fields['codigo_area'].widget.attrs['autofocus'] = True
 
     class Meta:
@@ -29,6 +27,11 @@ class AreaConocimientoForm(ModelForm):
                     'placeholder': 'De una descripción del área',
                 }
             ),
+            'cod_area_contenida': Select(
+                attrs={
+                    'class': 'select2',
+                }
+            )
         }
 
     def save(self, commit=True):
@@ -49,9 +52,6 @@ class AreaConocimientoForm(ModelForm):
 class AutorForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        for form in self.visible_fields():
-            form.field.widget.attrs['class'] = 'form-control'
-            form.field.widget.attrs['autocomplete'] = 'off'
         self.fields['codigo_autor'].widget.attrs['autofocus'] = True
 
     class Meta:
@@ -94,44 +94,37 @@ class AutorForm(ModelForm):
             data['error'] = str(e)
         return data
 
-    
-
-class LibroForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for form in self.visible_fields():
-            form.field.widget.attrs['class'] = 'form-control'
-            form.field.widget.attrs['autocomplete'] = 'off'
-        self.fields['isbn'].widget.attrs['autofocus'] = True
-
-    class Meta:
-        model = Libro
-        fields = '__all__'
         
-
-    def save(self, commit=True):
-        data = {}
-        form = super()
-        try:
-            if form.is_valid():
-                form.save()
-            else:
-                data['error'] = form.errors
-        except Exception as e:
-            data['error'] = str(e)
-        return data
-    
 class EditorialForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        for form in self.visible_fields():
-            form.field.widget.attrs['class'] = 'form-control'
-            form.field.widget.attrs['autocomplete'] = 'off'
         self.fields['codigo_editorial'].widget.attrs['autofocus'] = True
 
     class Meta:
         model = Editorial
         fields = '__all__'
+        widgets = {
+            'codigo_editorial': TextInput(
+                attrs={
+                    'placeholder': 'Ingrese el codigo de la editorial: ED001',
+                }
+            ),
+            'nombre_editorial': TextInput(
+                attrs={
+                    'placeholder': 'Ingrese el nombre de la editorial',
+                }
+            ),
+            'pagina_web': TextInput(
+                attrs={
+                    'placeholder': 'http://bibliotecaunivalle.edu.co',
+                }
+            ),
+            'pais_origen': TextInput(
+                attrs={
+                    'placeholder': 'Ingrese el pais de Origen',
+                }
+            ),
+        }
         
     def save(self, commit=True):
         data = {}
@@ -144,6 +137,66 @@ class EditorialForm(ModelForm):
                     form.save()
             else:
                 data['error'] = self.errors
+        except Exception as e:
+            data['error'] = str(e)
+        return data
+
+
+class LibroForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['isbn'].widget.attrs['autofocus'] = True
+
+    class Meta:
+        model = Libro
+        fields = '__all__'
+        widgets = {
+            'isbn': TextInput(
+                attrs={
+                    'placeholder': 'Ingrese el ISBN del libro',
+                }
+            ),
+            'titulo': TextInput(
+                attrs={
+                    'placeholder': 'Escribe el titulo del libro',
+                }
+            ),
+            'anio_publicacion': TextInput(
+                attrs={
+                    'placeholder': 'Escribe el año de publicacion del libro',
+                }
+            ),
+            'numero_pagina': TextInput(
+                attrs={
+                    'placeholder': 'Escribe la cantidad de paginas',
+                }
+            ),
+            'codigo_area': Select(
+                attrs={
+                    'class':'select2'
+                }
+            ),
+            'codigo_editorial': Select(
+                attrs={
+                    'class':'select2'
+                }
+            ),
+            'autores': forms.SelectMultiple(
+                attrs={
+                    'class':'select2'
+                }
+            ),
+        }
+        
+
+    def save(self, commit=True):
+        data = {}
+        form = super()
+        try:
+            if form.is_valid():
+                form.save()
+            else:
+                data['error'] = form.errors
         except Exception as e:
             data['error'] = str(e)
         return data
