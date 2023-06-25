@@ -88,10 +88,9 @@ class Libro(models.Model):
         db_table = 'libro'
 
     def toJSON(self):
-        item = model_to_dict(self)
-        item['areaconocimiento']= self.codigo_area.nombre_area
-        item['editorial']= self.codigo_editorial.nombre_editorial
-        print(item)
+        item = model_to_dict(self, exclude=['autores'])
+        item['areaconocimiento']= self.codigo_area.toJSON()
+        item['editorial']= self.codigo_editorial.toJSON()
         return item
 
 class Ejemplar(models.Model):
