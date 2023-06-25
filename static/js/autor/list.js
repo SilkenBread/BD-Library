@@ -1,39 +1,40 @@
-$(document).ready(function (){
-    $.ajax({
-        url: window.location.pathname,
-        type: 'POST',
-        data: {
-            'action': 'list_autores'
+$(function () {
+    $('#tableData').DataTable({
+        responsive: true,
+        autoWidth: false,
+        destroy: true,
+        deferRender: true,
+        ajax: {
+            url: window.location.pathname,
+            type: 'POST',
+            data: {
+                'action': 'searchdata'
+            },
+            dataSrc: ""
         },
-    }).done(function(data){
-        console.log(data)
-        let data_table = $('#tableData').DataTable({
-            autoWidth: false,
-            destroy: true,
-            scrollX: true,
-            deferRender: true,
-            sAjaxDataProp: "",
-            data: JSON.parse(data.data),
-            columns: [
-              { data: 'pk' },
-              { data: function(row) { return row.fields.primer_nombre; } },
-              { data: function(row) { return row.fields.segundo_nombre; } },
-              { data: function(row) { return row.fields.primer_apellido; } },
-              { data: function(row) { return row.fields.segundo_apellido; } },
-              { data: function(row) { return row.fields.segundo_apellido; } },
-            ],
-            columnDefs:[
-                {
-                    targets: [-1],
-                    class: 'text-center',
-                    orderable: false,
-                    render: function (data, type, row) {
-                        var buttons = `<a href="/app/autores/update/${row.pk}/" class="btn btn-secondary btn-xs"><i class="fas fa-edit"></i></a>
-                                       <a href="/app/autores/delete/${row.pk}/" class="btn btn-danger btn-xs"><i class="fas fa-trash"></i></a>`
-                        return buttons;
-                    }
-                },
-            ]
-        });
-    })
-})
+        columns: [
+            {"data": "position"},
+            {"data": "codigo_autor"},
+            {"data": "primer_nombre"},
+            {"data": "segundo_nombre"},
+            {"data": "primer_apellido"},
+            {"data": "segundo_apellido"},
+            {"data": "id"},
+        ],
+        columnDefs: [
+            {
+                targets: [-1],
+                class: 'text-center',
+                orderable: false,
+                render: function (data, type, row) {
+                    var buttons = `<a href="/app/autores/update/${row.id}/" class="btn btn-secondary btn-xs"><i class="fas fa-edit"></i></a>
+                                   <a href="/app/autores/delete/${row.id}/" class="btn btn-danger btn-xs"><i class="fas fa-trash"></i></a>`
+                    return buttons;
+                }
+            },
+        ],
+        initComplete: function (settings, json) {
+
+        }
+    });
+});

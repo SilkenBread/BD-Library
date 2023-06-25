@@ -23,16 +23,20 @@ class AutoresListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, ListV
         data = {}
         try:
             action = request.POST['action']
-            if action == 'list_autores':
-                queryset = self.model.objects.all()
-                data['type'] = 'success'
-                data['data'] = serializers.serialize('json', queryset)
-
+            if action == 'searchdata':
+                data = []
+                position = 1
+                for i in Autor.objects.all():
+                    item = i.toJSON()
+                    item['position'] = position
+                    data.append(item)
+                    position+=1
+            else:
+                data['error'] = 'Ha ocurrido un error'
         except Exception as e:
-            data['type'] = 'error'
             data['error'] = str(e)
         return JsonResponse(data, safe=False)
-  
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Listado Autores'

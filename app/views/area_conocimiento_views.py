@@ -23,13 +23,17 @@ class AreaConocimientoListView(LoginRequiredMixin, ValidatePermissionRequiredMix
         data = {}
         try:
             action = request.POST['action']
-            if action == 'list_area_conocimiento':
-                queryset = self.model.objects.all()
-                data['type'] = 'success'
-                data['data'] = serializers.serialize('json', queryset)
-
+            if action == 'searchdata':
+                data = []
+                position = 1
+                for i in Areaconocimiento.objects.all():
+                    item = i.toJSON()
+                    item['position'] = position
+                    data.append(item)
+                    position+=1
+            else:
+                data['error'] = 'Ha ocurrido un error'
         except Exception as e:
-            data['type'] = 'error'
             data['error'] = str(e)
         return JsonResponse(data, safe=False)
 

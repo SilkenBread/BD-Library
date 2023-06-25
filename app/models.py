@@ -1,19 +1,23 @@
-# This is an auto-generated Django model module.
-# You'll have to do the following manually to clean this up:
-#   * Rearrange models' order
-#   * Make sure each model has one field with primary_key=True
-#   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
-#   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
-# Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 from datetime import datetime
-
+from crum import get_current_user
 from django.forms import model_to_dict
 from user.models import User
 from django.core.validators import RegexValidator
+from django.core import serializers
 
 class Areaconocimiento(models.Model):
-    codigo_area = models.CharField(primary_key=True, max_length=10, verbose_name='Código')
+    codigo_area = models.CharField(
+        unique=True,
+        max_length=10,
+        verbose_name='Código',
+        validators=[
+            RegexValidator(
+                regex=r'^[aA]\d{2}$',
+                message=('No cumple con el estandar. Ej: A01'),
+                code ='invalid_name_areaconocimiento'
+            )
+        ])
     nombre_area = models.CharField(max_length=20, verbose_name='Nombre')
     desc_area = models.CharField(max_length=50, null=True, blank=True, verbose_name='Descripción')
     cod_area_contenida = models.ForeignKey('self', models.DO_NOTHING, null=True, blank=True, verbose_name='Código sub área')
@@ -24,25 +28,33 @@ class Areaconocimiento(models.Model):
     class Meta:
         verbose_name_plural='Áreas de conocimiento'
         db_table = 'areaconocimiento'
+    
+    def toJSON(self):
+        item = model_to_dict(self)
+        return item
 
 
 class Autor(models.Model):
-    codigo_autor = models.CharField(primary_key=True, max_length=10, verbose_name='Código')
+    codigo_autor = models.CharField(unique=True,max_length=10, verbose_name='Código',)
     primer_nombre = models.CharField(max_length=40, verbose_name='Primer nombre')
     segundo_nombre = models.CharField(max_length=40, blank=True, null=True, verbose_name='Segundo nombre')
     primer_apellido = models.CharField(max_length=40, verbose_name='Primer apellido')
     segundo_apellido = models.CharField(max_length=40, blank=True, null=True, verbose_name='Segundo apellido')
 
     def __str__(self):
-        return self.codigo_autor
+        return f"{self.codigo_autor} | {self.primer_nombre} {self.primer_apellido}"
     
     class Meta:
         verbose_name_plural='Autores'
         db_table = 'autor'
 
+    def toJSON(self):
+        item = model_to_dict(self)
+        return item
+
 
 class Editorial(models.Model):
-    codigo_editorial = models.CharField(primary_key=True, max_length=10, verbose_name='ID'  )
+    codigo_editorial = models.CharField(unique=True, max_length=10, verbose_name='ID'  )
     nombre_editorial = models.CharField(max_length=30, verbose_name='Nombre')
     pagina_web = models.URLField(blank=True, null=True, verbose_name='URL')
     pais_origen = models.CharField(max_length=30, blank=True, null=True, verbose_name='País origen')
@@ -53,10 +65,14 @@ class Editorial(models.Model):
     class Meta:
         verbose_name_plural='Editoriales'
         db_table = 'editorial'
+        
+    def toJSON(self):
+        item = model_to_dict(self)
+        return item
 
 
 class Libro(models.Model):
-    isbn = models.CharField(primary_key=True, max_length=30, verbose_name='ISBN')
+    isbn = models.CharField(unique=True, max_length=30, verbose_name='ISBN')
     titulo = models.CharField(max_length=50, verbose_name='Título')
     anio_publicacion = models.IntegerField(blank=True, null=True, verbose_name='Año publicación')
     numero_pagina = models.IntegerField(blank=True, null=True, verbose_name='Número de páginas')
