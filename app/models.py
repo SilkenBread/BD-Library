@@ -39,7 +39,7 @@ class Autor(models.Model):
     codigo_autor = models.CharField(unique=True,max_length=10, verbose_name='Código',)
     primer_nombre = models.CharField(max_length=40, verbose_name='Primer nombre')
     segundo_nombre = models.CharField(max_length=40, blank=True, null=True, verbose_name='Segundo nombre')
-    primer_apellido = models.CharField(max_length=40, verbose_name='Primer apellido')
+    primer_apellido = models.CharField(max_length=40, blank=True, null=True, verbose_name='Primer apellido')
     segundo_apellido = models.CharField(max_length=40, blank=True, null=True, verbose_name='Segundo apellido')
 
     def __str__(self):
@@ -137,7 +137,7 @@ class LibroDigital(models.Model):
 class Descargas(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Usuario')
     libro = models.ForeignKey(LibroDigital, on_delete=models.PROTECT, verbose_name='Libro', null=True, blank=True)
-    fecha_descarga = models.DateField(default=datetime.now)
+    fecha_descarga = models.DateField(default=datetime.now, verbose_name='Fecha de descarga')
     direccion_ip = models.GenericIPAddressField(verbose_name='Dirección IP')
 
     class Meta:
@@ -155,7 +155,7 @@ class Solicitud(models.Model):
     isbn = models.CharField(unique=True, max_length=30, verbose_name='ISBN')
     titulo = models.CharField(unique=True, max_length=50, verbose_name='Título')
     descripcion = models.CharField(max_length=300, verbose_name='Descripcion solicitud', null=True, blank=True)
-    fecha = models.DateField(default=datetime.now)
+    fecha = models.DateField(default=datetime.now, verbose_name='Fecha de solicitud')
 
     class Meta:
         verbose_name_plural='Libros descargados'
@@ -167,13 +167,40 @@ class Solicitud(models.Model):
     
 class Prestamo(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Usuario')
-    ejemplar = models.ManyToManyField(Ejemplar)
-    fecha_realizacion = models.DateField(default=datetime.now)
-    fecha_devolucion = models.DateField(default=datetime.now() + timedelta(days=3))
+    ejemplar = models.ManyToManyField(Ejemplar, verbose_name='Ejemplares')
+    fecha_realizacion = models.DateField(default=datetime.now, verbose_name='Fecha de realizacion')
+    fecha_devolucion = models.DateField(default=datetime.now() + timedelta(days=3), verbose_name='Fecha de devolucion')
 
     class Meta:
         verbose_name_plural='Prestamos'
         db_table = 'prestamo'
+
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['fecha_realizacion'] = self.fecha_realizacion.strftime('%Y-%m-%d')
+        item['fecha_devolucion'] = self.fecha_devolucion.strftime('%Y-%m-%d')
+        item['ejemplar'] = serializers.serialize('json', self.ejemplar.all())
+        return item
+    
+    def save(self, *args, **kwargs):
+        if not self.usuario_id:
+            self.usuario_id = self._get_current_user_id()
+        super().save(*args, **kwargs)
+
+    def _get_current_user_id(self):
+        usuario = self.request.user.id
+        return usuario
+    
+class Multa(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Usuario')
+    valor = models.IntegerField(blank=True, null=True, default=1200, verbose_name='Valor multa')
+    descripcion = models.CharField(max_length=300, verbose_name='Descripcion Multa', null=True, blank=True)
+    fecha = models.DateField(default=datetime.now, verbose_name='Fecha de Multa')
+    estado = models.BooleanField(default=False ,blank=False, null=False, verbose_name='Pagado')
+    
+    class Meta:
+        verbose_name_plural='Multas'
+        db_table = 'multa'
 
     def toJSON(self):
         item = model_to_dict(self)

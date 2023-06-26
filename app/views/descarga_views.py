@@ -41,6 +41,6 @@ class DescargaListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, List
         context = super().get_context_data(**kwargs)
         context['title'] = 'Listado de libros digitales descargados'
         context['list_url'] = reverse_lazy('app:descarga_list')
-        #context['create_url'] = reverse_lazy('app:area_conocimiento_create')
+        #context['create_url'] = reverse_lazy('app:descarga_create')
         context['entity'] = 'Libros descargados'
         return context

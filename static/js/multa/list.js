@@ -15,9 +15,9 @@ $(function () {
         columns: [
             {"data": "position"},
             {"data": "usuario"},
-            {"data": "fecha_realizacion"},
-            {"data": "fecha_devolucion"},
-            {"data": "ejemplar"},
+            {"data": "valor"},
+            {"data": "descripcion"},
+            {"data": "fecha"},
             {"data": "id"},
         ],
         columnDefs: [
@@ -26,13 +26,14 @@ $(function () {
                 class: 'text-center',
                 orderable: false,
                 render: function (data, type, row) {
-                    var buttons = `<a href="/app/prestamo/update/${row.id}/" class="btn btn-secondary btn-xs"><i class="fas fa-edit"></i></a>
-                                   <a href="/app/prestamo/delete/${row.id}/" class="btn btn-danger btn-xs"><i class="fas fa-trash"></i></a>`
+                    var buttons = `<a href="/app/multa/update/${row.id}/" class="btn btn-secondary btn-xs"><i class="fas fa-edit"></i></a>
+                                   <a href="/app/multa/delete/${row.id}/" class="btn btn-danger btn-xs"><i class="fas fa-trash"></i></a>`
                     return buttons;
                 }
             },
         ],
         initComplete: function (settings, json) {
+
         }
     });
 });

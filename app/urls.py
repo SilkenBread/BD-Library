@@ -7,6 +7,7 @@ from app.views.editorial_views import *
 from app.views.ejemplar_views import *
 from app.views.libro_views import *
 from app.views.librodigital_views import *
+from app.views.multa_views import *
 from app.views.prestamo_views import *
 from app.views.solicitud_views import *
 
@@ -57,4 +58,9 @@ urlpatterns = [
     path('prestamo/add/', PrestamoCreateView.as_view(), name="prestamo_create"),
     path('prestamo/update/<str:pk>/', PrestamoUpdateView.as_view(), name="prestamo_update"),
     path('prestamo/delete/<str:pk>/', PrestamoDeleteView.as_view(), name="prestamo_delete"),
+    #Multa
+    path('multa/list/', MultaListView.as_view(), name="multa_list"),
+    path('multa/add/', MultaCreateView.as_view(), name="multa_create"),
+    # path('multa/update/<str:pk>/', MultaUpdateView.as_view(), name="multa_update"),
+    # path('multa/delete/<str:pk>/', MultaDeleteView.as_view(), name="multa_delete"),
 ]

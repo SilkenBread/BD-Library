@@ -1,7 +1,7 @@
 from django.forms import *
 from django import forms
 
-from app.models import Areaconocimiento, Autor, Editorial, Ejemplar, Libro, LibroDigital, Prestamo, Solicitud
+from app.models import Areaconocimiento, Autor, Editorial, Ejemplar, Libro, LibroDigital, Multa, Prestamo, Solicitud
 
 class AreaConocimientoForm(ModelForm):
     def __init__(self, *args, **kwargs):
@@ -266,6 +266,23 @@ class SolicitudForm(ModelForm):
         model = Solicitud
         fields = '__all__'
         widgets = {
+            'isbn': TextInput(
+                attrs={
+                    'placeholder': 'Escriba el ISBN del libro que desea'
+                }
+            ),
+            'titulo': TextInput(
+                attrs={
+                    'placeholder': 'Escriba el titulo de su libro'
+                }
+            ),
+            'descripcion': Textarea(
+                attrs={
+                    'placeholder': 'Escriba por que solicita el libro',
+                    'rows': 3,
+                    'cols': 3
+                }
+            ),
         }
         
     def save(self, commit=True):
@@ -288,6 +305,44 @@ class PrestamoForm(ModelForm):
         model = Prestamo
         fields = '__all__'
         widgets = {
+            'ejemplar': forms.SelectMultiple(
+                attrs={
+                    'class':'select2'
+                }
+            ),
+        }
+        exclude = ['fecha_realizacion', 'fecha_devolucion', 'usuario']
+        
+    def save(self, commit=True, user=None):
+        data = {}
+        instance = super().save(commit=False)
+        if user:
+            instance.usuario = user
+        if commit:
+            instance.save()
+        return instance
+    
+
+class MultaForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    class Meta:
+        model = Multa
+        fields = '__all__'
+        widgets = {
+            'usuario': Select(
+                attrs={
+                    'class':'select2'
+                }
+            ),
+            'descripcion': Textarea(
+                attrs={
+                    'placeholder': 'Escriba por que solicita el libro',
+                    'rows': 3,
+                    'cols': 3
+                }
+            ),
         }
         
     def save(self, commit=True):

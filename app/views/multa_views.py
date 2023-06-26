@@ -4,16 +4,16 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import *
-from app.forms import PrestamoForm
+from app.forms import MultaForm
 from app.mixins import ValidatePermissionRequiredMixin
 from app.models import *
 from django.core import serializers
 import json
 
-class PrestamoListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, ListView):
-    model = Prestamo
-    template_name = 'prestamo/list.html'
-    permission_required = 'app.view_prestamo'
+class MultaListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, ListView):
+    model = Multa
+    template_name = 'multa/list.html'
+    permission_required = 'app.view_multa'
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -26,12 +26,11 @@ class PrestamoListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, List
             if action == 'searchdata':
                 data = []
                 position = 1
-                prestamos = Prestamo.objects.select_related('usuario').prefetch_related('ejemplar').all()
-                for prestamo in prestamos:
-                    item = prestamo.toJSON()
+                for i in Multa.objects.filter(estado=False):
+                    item = i.toJSON()
                     item['position'] = position
                     data.append(item)
-                    position += 1
+                    position+=1
             else:
                 data['error'] = 'Ha ocurrido un error'
         except Exception as e:
@@ -41,18 +40,18 @@ class PrestamoListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, List
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Listado de prestamos'
-        context['list_url'] = reverse_lazy('app:prestamo_list')
-        context['create_url'] = reverse_lazy('app:prestamo_create')
-        context['entity'] = 'Prestamos'
+        context['title'] = 'Listado Multas'
+        context['list_url'] = reverse_lazy('app:multa_list')
+        context['create_url'] = reverse_lazy('app:multa_create')
+        context['entity'] = 'Multas'
         return context
     
-class PrestamoCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, CreateView):
-    model = Prestamo
-    form_class = PrestamoForm
-    template_name = 'prestamo/create.html'
-    permission_required = 'app.add_prestamo'
-    success_url = reverse_lazy('app:prestamo_list')
+class MultaCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, CreateView):
+    model = Multa
+    form_class = MultaForm
+    template_name = 'multa/create.html'
+    success_url = reverse_lazy('app:multa_list')
+    permission_required = 'app.add_multa'
     url_redirect = success_url
 
     def dispatch(self, request, *args, **kwargs):
@@ -63,35 +62,28 @@ class PrestamoCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Cr
         try:
             action = request.POST['action']
             if action == 'add':
-                form = self.get_form()  
-                if form.is_valid():
-                    instance = form.save(commit=False)
-                    instance.usuario = request.user
-                    instance.save()
-                    form.save_m2m() #Guarda los ejemplares seleccionados
-                    data['success'] = 'El prestamo se ha creado exitosamente.'
-                else:
-                    data['error'] = form.errors
+                form = self.get_form()
+                data = form.save()
             else:
                 data['error'] = 'No ha ingresado a ninguna opción'
         except Exception as e:
             data['error'] = str(e)
-        return JsonResponse(data, safe=False)
+        return JsonResponse(data)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Creacion de un prestamo'
-        context['entity'] = 'Prestamos'
+        context['title'] = 'Creacion de un Multa'
+        context['entity'] = 'Multas'
         context['list_url'] = self.success_url
         context['action'] = 'add'
         return context
     
-class PrestamoUpdateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, UpdateView):
-    model = Solicitud
-    form_class = PrestamoForm
-    template_name = 'prestamo/create.html'
-    permission_required = 'app.change_prestamo'
-    success_url = reverse_lazy('app:prestamo_list')
+class MultaUpdateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, UpdateView):
+    model = Multa
+    form_class = MultaForm
+    template_name = 'multa/create.html'
+    permission_required = 'app.change_multa'
+    success_url = reverse_lazy('app:multa_list')
     url_redirect = success_url
 
     def dispatch(self, request, *args, **kwargs):
@@ -109,25 +101,23 @@ class PrestamoUpdateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Up
                     data['success'] = 'Registro actualizado exitosamente'
                 else:
                     data['error'] = form.errors
-            else:
-                data['error'] = 'No ha ingresado a ninguna opción'
         except Exception as e:
             data['error'] = str(e)
         return JsonResponse(data)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Edición de un prestamo'
-        context['entity'] = 'Prestamos'
+        context['title'] = 'Edición de una multa'
+        context['entity'] = 'Multas'
         context['list_url'] = self.success_url
         context['action'] = 'edit'
         return context
     
-class PrestamoDeleteView(LoginRequiredMixin, ValidatePermissionRequiredMixin, DeleteView):
-    model = Prestamo
-    template_name = 'prestamo/delete.html'
-    permission_required = 'app.delete_prestamo'
-    success_url = reverse_lazy('app:prestamo_list')
+class MultaDeleteView(LoginRequiredMixin, ValidatePermissionRequiredMixin, DeleteView):
+    model = Multa
+    template_name = 'multa/delete.html'
+    permission_required = 'app.delete_multa'
+    success_url = reverse_lazy('app:multa_list')
     url_redirect = success_url
 
     def dispatch(self, request, *args, **kwargs):
@@ -144,7 +134,7 @@ class PrestamoDeleteView(LoginRequiredMixin, ValidatePermissionRequiredMixin, De
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Eliminación de un prestamo'
-        context['entity'] = 'Prestamos'
+        context['title'] = 'Eliminación de una multa'
+        context['entity'] = 'Multas'
         context['list_url'] = self.success_url
         return context
