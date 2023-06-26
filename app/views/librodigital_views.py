@@ -31,11 +31,20 @@ class LibroDigitalListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, 
                     item['position'] = position
                     data.append(item)
                     position+=1
+            elif action == 'download':
+                try:
+                    libro = request.POST['parameters']
+                    usuario = request.user.id
+                    direccion_ip=request.META['REMOTE_ADDR']
+
+                    descarga = Descargas(usuario_id=usuario, libro_id=libro, direccion_ip=direccion_ip)
+                    descarga.save()
+                except:
+                    raise ValueError('No se pudo descargar el libro')
             else:
                 data['error'] = 'Ha ocurrido un error'
         except Exception as e:
             data['error'] = str(e)
-        print(data)
         return JsonResponse(data, safe=False)
 
     def get_context_data(self, **kwargs):

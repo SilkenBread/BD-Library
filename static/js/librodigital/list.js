@@ -29,7 +29,7 @@ $(function () {
                 render: function (data, type, row) {
                     var buttons = `<a href="/app/librodigital/update/${row.id}/" class="btn btn-secondary btn-xs"><i class="fas fa-edit"></i></a>
                                    <a href="/app/librodigital/delete/${row.id}/" class="btn btn-danger btn-xs"><i class="fas fa-trash"></i></a>
-                                   <a href="#" class="btn btn-primary btn-xs"><i class="fa-solid fa-download"></i></a>`
+                                   <button onClick="descargar(${row.id})" class="btn btn-primary btn-xs"><i class="fa-solid fa-download"></i></button>`
                     return buttons;
                 }
             },
@@ -39,3 +39,24 @@ $(function () {
         }
     });
 });
+
+function descargar(id){
+    console.log(id)
+    $.ajax({
+        url: window.location.pathname,
+        type: 'POST',
+        data: {
+            'action': 'download',
+            'parameters': id
+        },
+    }).done(function() {
+        Swal.fire({
+            icon: 'success',
+            title: 'Se descargo el libro',
+            showConfirmButton: false,
+            timer: 1000
+        });              
+    }).fail(function (textStatus, errorThrown) {
+        alert(textStatus + ': ' + errorThrown);
+    });
+}

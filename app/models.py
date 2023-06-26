@@ -5,6 +5,7 @@ from django.forms import model_to_dict
 from user.models import User
 from django.core.validators import RegexValidator
 from django.core import serializers
+from django.utils import timezone
 
 class Areaconocimiento(models.Model):
     codigo_area = models.CharField(
@@ -132,3 +133,10 @@ class LibroDigital(models.Model):
         item = model_to_dict(self)
         item['datalibro'] = self.libro.toJSON()
         return item
+    
+class Descargas(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Usuario')
+    libro = models.ForeignKey(LibroDigital, on_delete=models.PROTECT, verbose_name='Libro', null=True, blank=True)
+    fecha_descarga = models.DateTimeField(default=timezone.now)
+    direccion_ip = models.GenericIPAddressField(verbose_name='Dirección IP')
+
