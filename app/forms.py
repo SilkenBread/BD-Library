@@ -1,7 +1,7 @@
 from django.forms import *
 from django import forms
 
-from app.models import Areaconocimiento, Autor, Editorial, Ejemplar, Libro, LibroDigital
+from app.models import Areaconocimiento, Autor, Editorial, Ejemplar, Libro, LibroDigital, Prestamo, Solicitud
 
 class AreaConocimientoForm(ModelForm):
     def __init__(self, *args, **kwargs):
@@ -244,6 +244,50 @@ class LibroDigitalForm(ModelForm):
                     'placeholder': 'http://ejemplourlvalida.com'
                 }
             )
+        }
+        
+    def save(self, commit=True):
+        data = {}
+        form = super()
+        try:
+            if form.is_valid():
+                form.save()
+            else:
+                data['error'] = form.errors
+        except Exception as e:
+            data['error'] = str(e)
+        return data
+    
+class SolicitudForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    class Meta:
+        model = Solicitud
+        fields = '__all__'
+        widgets = {
+        }
+        
+    def save(self, commit=True):
+        data = {}
+        form = super()
+        try:
+            if form.is_valid():
+                form.save()
+            else:
+                data['error'] = form.errors
+        except Exception as e:
+            data['error'] = str(e)
+        return data
+    
+class PrestamoForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    class Meta:
+        model = Prestamo
+        fields = '__all__'
+        widgets = {
         }
         
     def save(self, commit=True):

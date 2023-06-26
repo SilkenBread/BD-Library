@@ -2,10 +2,13 @@ from django.urls import path
 from app.views.area_conocimiento_views import *
 from app.views.autores_views import *
 from app.views.dashboard_views import DashboardView
+from app.views.descarga_views import DescargaListView
 from app.views.editorial_views import *
 from app.views.ejemplar_views import *
 from app.views.libro_views import *
 from app.views.librodigital_views import *
+from app.views.prestamo_views import *
+from app.views.solicitud_views import *
 
 app_name= 'app'
 
@@ -42,4 +45,16 @@ urlpatterns = [
     path('librodigital/add/', LibroDigitalCreateView.as_view(), name="librodigital_create"),
     path('librodigital/update/<str:pk>/', LibroDigitalUpdateView.as_view(), name="librodigital_update"),
     path('librodigital/delete/<str:pk>/', LibroDigitalDeleteView.as_view(), name="librodigital_delete"),
+    #Descargas
+    path('descarga/list/', DescargaListView.as_view(), name="descarga_list"),
+    #Solicitud libros nuevos
+    path('solicitud/list/', SolicitudListView.as_view(), name="solicitud_list"),
+    path('solicitud/add/', SolicitudCreateView.as_view(), name="solicitud_create"),
+    path('solicitud/update/<str:pk>/', SolicitudUpdateView.as_view(), name="solicitud_update"),
+    path('solicitud/delete/<str:pk>/', SolicitudDeleteView.as_view(), name="solicitud_delete"),
+    #Prestamos
+    path('prestamo/list/', PrestamoListView.as_view(), name="prestamo_list"),
+    path('prestamo/add/', PrestamoCreateView.as_view(), name="prestamo_create"),
+    path('prestamo/update/<str:pk>/', PrestamoUpdateView.as_view(), name="prestamo_update"),
+    path('prestamo/delete/<str:pk>/', PrestamoDeleteView.as_view(), name="prestamo_delete"),
 ]

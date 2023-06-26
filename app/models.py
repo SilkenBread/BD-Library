@@ -1,5 +1,5 @@
 from django.db import models
-from datetime import datetime
+from datetime import datetime, timedelta
 from crum import get_current_user
 from django.forms import model_to_dict
 from user.models import User
@@ -137,6 +137,44 @@ class LibroDigital(models.Model):
 class Descargas(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Usuario')
     libro = models.ForeignKey(LibroDigital, on_delete=models.PROTECT, verbose_name='Libro', null=True, blank=True)
-    fecha_descarga = models.DateTimeField(default=timezone.now)
+    fecha_descarga = models.DateField(default=datetime.now)
     direccion_ip = models.GenericIPAddressField(verbose_name='Dirección IP')
 
+    class Meta:
+        verbose_name_plural='Libros descargados'
+        db_table = 'descargas_libros'
+
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['datalibro'] = self.libro.toJSON()
+        item['fecha'] = self.fecha_descarga.strftime('%Y-%m-%d')
+        return item
+
+class Solicitud(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Usuario')
+    isbn = models.CharField(unique=True, max_length=30, verbose_name='ISBN')
+    titulo = models.CharField(unique=True, max_length=50, verbose_name='Título')
+    descripcion = models.CharField(max_length=300, verbose_name='Descripcion solicitud', null=True, blank=True)
+    fecha = models.DateField(default=datetime.now)
+
+    class Meta:
+        verbose_name_plural='Libros descargados'
+        db_table = 'solicitud'
+
+    def toJSON(self):
+        item = model_to_dict(self)
+        return item
+    
+class Prestamo(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Usuario')
+    ejemplar = models.ManyToManyField(Ejemplar)
+    fecha_realizacion = models.DateField(default=datetime.now)
+    fecha_devolucion = models.DateField(default=datetime.now() + timedelta(days=3))
+
+    class Meta:
+        verbose_name_plural='Prestamos'
+        db_table = 'prestamo'
+
+    def toJSON(self):
+        item = model_to_dict(self)
+        return item
