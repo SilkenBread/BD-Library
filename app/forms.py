@@ -1,7 +1,7 @@
 from django.forms import *
 from django import forms
 
-from app.models import Areaconocimiento, Autor, Editorial, Ejemplar, Libro
+from app.models import Areaconocimiento, Autor, Editorial, Ejemplar, Libro, LibroDigital
 
 class AreaConocimientoForm(ModelForm):
     def __init__(self, *args, **kwargs):
@@ -212,6 +212,38 @@ class EjemplarForm(ModelForm):
                     'class':'select2'
                 }
             ),
+        }
+        
+    def save(self, commit=True):
+        data = {}
+        form = super()
+        try:
+            if form.is_valid():
+                form.save()
+            else:
+                data['error'] = form.errors
+        except Exception as e:
+            data['error'] = str(e)
+        return data
+    
+class LibroDigitalForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    class Meta:
+        model = LibroDigital
+        fields = '__all__'
+        widgets = {
+            'libro': Select(
+                attrs={
+                    'class': 'select2'
+                }
+            ),
+            'url': TextInput(
+                attrs={
+                    'placeholder': 'http://ejemplourlvalida.com'
+                }
+            )
         }
         
     def save(self, commit=True):

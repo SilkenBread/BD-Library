@@ -92,9 +92,9 @@ class Libro(models.Model):
         item['areaconocimiento']= self.codigo_area.toJSON()
         item['editorial']= self.codigo_editorial.toJSON()
         return item
-
+    
 class Ejemplar(models.Model):
-    libro = models.ForeignKey(Libro, on_delete=models.PROTECT)
+    libro = models.ForeignKey(Libro, on_delete=models.PROTECT, verbose_name='Libro')
     numero_ejemplar = models.PositiveIntegerField(verbose_name='Número ejemplar')
     numero_sala = models.PositiveIntegerField(verbose_name='Número de sala')
     numero_pasillo = models.PositiveIntegerField(verbose_name='Número de pasillo')
@@ -114,8 +114,9 @@ class Ejemplar(models.Model):
         item = model_to_dict(self)
         item['datalibro'] = self.libro.toJSON()
         return item
-
-class LibroDigital(Libro):
+    
+class LibroDigital(models.Model):
+    libro = models.OneToOneField(Libro, on_delete=models.PROTECT, verbose_name='Libro', null=True, blank=True)
     formato = models.CharField(max_length=30, verbose_name='Formato')
     url = models.URLField(verbose_name='URL')
     tamanio = models.IntegerField(verbose_name='Tamaño del Libro')
@@ -129,4 +130,5 @@ class LibroDigital(Libro):
 
     def toJSON(self):
         item = model_to_dict(self)
+        item['datalibro'] = self.libro.toJSON()
         return item

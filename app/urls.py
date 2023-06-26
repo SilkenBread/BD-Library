@@ -5,6 +5,7 @@ from app.views.dashboard_views import DashboardView
 from app.views.editorial_views import *
 from app.views.ejemplar_views import *
 from app.views.libro_views import *
+from app.views.librodigital_views import *
 
 app_name= 'app'
 
@@ -36,4 +37,9 @@ urlpatterns = [
     path('ejemplar/add/', EjemplarCreateView.as_view(), name="ejemplar_create"),
     path('ejemplar/update/<str:pk>/', EjemplarUpdateView.as_view(), name="ejemplar_update"),
     path('ejemplar/delete/<str:pk>/', EjemplarDeleteView.as_view(), name="ejemplar_delete"),
+    #Libros digitales
+    path('librodigital/list/', LibroDigitalListView.as_view(), name="librodigital_list"),
+    path('librodigital/add/', LibroDigitalCreateView.as_view(), name="librodigital_create"),
+    path('librodigital/update/<str:pk>/', LibroDigitalUpdateView.as_view(), name="librodigital_update"),
+    path('librodigital/delete/<str:pk>/', LibroDigitalDeleteView.as_view(), name="librodigital_delete"),
 ]
