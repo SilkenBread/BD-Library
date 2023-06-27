@@ -1,3 +1,4 @@
+import json
 from django.db import models
 from datetime import datetime, timedelta
 from crum import get_current_user
@@ -165,6 +166,15 @@ class Solicitud(models.Model):
         item = model_to_dict(self)
         return item
     
+    def save(self, *args, **kwargs):
+        if not self.usuario_id:
+            self.usuario_id = self._get_current_user_id()
+        super().save(*args, **kwargs)
+
+    def _get_current_user_id(self):
+        usuario = self.request.user.id
+        return usuario  
+    
 class Prestamo(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Usuario')
     ejemplar = models.ManyToManyField(Ejemplar, verbose_name='Ejemplares')
@@ -180,6 +190,17 @@ class Prestamo(models.Model):
         item['fecha_realizacion'] = self.fecha_realizacion.strftime('%Y-%m-%d')
         item['fecha_devolucion'] = self.fecha_devolucion.strftime('%Y-%m-%d')
         item['ejemplar'] = serializers.serialize('json', self.ejemplar.all())
+        # objeto_serializado = serializers.serialize('json', self.ejemplar.all())
+        # objeto_lista = json.loads(objeto_serializado)
+        # numeros_ejemplar = []
+
+        # for objeto_dict in objeto_lista:
+        #     ejemplares_serializados = json.loads(objeto_dict['ejemplar'])
+        #     for ejemplar_dict in ejemplares_serializados:
+        #         numero_ejemplar = ejemplar_dict['fields']['numero_ejemplar']
+        #         numeros_ejemplar.append(numero_ejemplar)
+
+        # item['ejemplares'] = json.dumps(numeros_ejemplar)
         return item
     
     def save(self, *args, **kwargs):
@@ -205,3 +226,5 @@ class Multa(models.Model):
     def toJSON(self):
         item = model_to_dict(self)
         return item
+    
+    

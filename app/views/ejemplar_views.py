@@ -26,7 +26,7 @@ class EjemplarListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, List
             if action == 'searchdata':
                 data = []
                 position = 1
-                for i in Ejemplar.objects.filter(disponibilidad=True):
+                for i in Ejemplar.objects.all():
                     item = i.toJSON()
                     item['position'] = position
                     data.append(item)

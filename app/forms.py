@@ -284,18 +284,16 @@ class SolicitudForm(ModelForm):
                 }
             ),
         }
+        exclude = ['usuario']
         
-    def save(self, commit=True):
+    def save(self, commit=True, user=None):
         data = {}
-        form = super()
-        try:
-            if form.is_valid():
-                form.save()
-            else:
-                data['error'] = form.errors
-        except Exception as e:
-            data['error'] = str(e)
-        return data
+        instance = super().save(commit=False)
+        if user:
+            instance.usuario = user
+        if commit:
+            instance.save()
+        return instance
     
 class PrestamoForm(ModelForm):
     def __init__(self, *args, **kwargs):

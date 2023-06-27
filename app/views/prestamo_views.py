@@ -30,6 +30,11 @@ class PrestamoListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, List
                 for prestamo in prestamos:
                     item = prestamo.toJSON()
                     item['position'] = position
+
+                    ejemplares = json.loads(item['ejemplar'])
+                    numeros_ejemplares = [ejemplar['fields']['numero_ejemplar'] for ejemplar in ejemplares]
+                    item['numeros_ejemplares'] = numeros_ejemplares
+                    
                     data.append(item)
                     position += 1
             else:

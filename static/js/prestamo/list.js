@@ -17,7 +17,7 @@ $(function () {
             {"data": "usuario"},
             {"data": "fecha_realizacion"},
             {"data": "fecha_devolucion"},
-            {"data": "ejemplar"},
+            {"data": "numeros_ejemplares"},
             {"data": "id"},
         ],
         columnDefs: [

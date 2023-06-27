@@ -61,6 +61,6 @@ urlpatterns = [
     #Multa
     path('multa/list/', MultaListView.as_view(), name="multa_list"),
     path('multa/add/', MultaCreateView.as_view(), name="multa_create"),
-    # path('multa/update/<str:pk>/', MultaUpdateView.as_view(), name="multa_update"),
-    # path('multa/delete/<str:pk>/', MultaDeleteView.as_view(), name="multa_delete"),
+    path('multa/update/<str:pk>/', MultaUpdateView.as_view(), name="multa_update"),
+    path('multa/delete/<str:pk>/', MultaDeleteView.as_view(), name="multa_delete"),
 ]
